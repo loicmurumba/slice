@@ -1,0 +1,23 @@
+{
+  "name": "slice",
+  "version": "1.0.0",
+  "description": "basic fighting game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loicmurumba/slice.git"
+  },
+  "author": "Loic Murumba; Arie Field",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/loicmurumba/slice/issues"
+  },
+  "homepage": "https://github.com/loicmurumba/slice#readme",
+  "dependencies": {
+    "express": "^4.15.2",
+    "socket.io": "^1.7.3"
+  }
+}
