@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title> Slice </title>
+</head>
+
+<body>
+	<marquee behavior="scroll" direction="left"><!Yo what's up loic?></marquee>
+</body>
+
+<canvas id="gc" width="500" height="500"></canvas>
+
+<script>
+var x = 400;
+var y = 0;
+window.onload=function()
+{
+	c = document.getElementById('gc');
+	cc = c.getContext('2d');
+	setInterval(update, 1000/60);
+}
+function update()
+{
+	var image = new Image();
+	image.src = "Images/figure.gif";
+	cc.fillStyle = 'white';
+	cc.fillRect(0,0,c.width,c.height);
+	cc.drawImage(image, x, y);
+	x -= 10;
+	if(x<=-300)
+		x = 500;
+}
+</script>
+
+</html>
