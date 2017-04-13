@@ -26,19 +26,21 @@ var
 
 //constants
 MOVESPEED = 3,
+START_X = 325,
+START_Y = 325,
 
 canvas,
 width,
 height,
 ctx,
-image,
+image,	//probably doesn't have to be global
 frames,
 keyStates = {};
 
 player = 
 {
-	x: 100,
-	y: 50,
+	x: START_X,
+	y: START_Y,
 
 	update: function()
 	{
@@ -70,7 +72,7 @@ player =
 	}
 };
 
-function onpress(e)
+function analyzeKeyPress(e)
 {
 	if(e.type == "keydown")
 	{
@@ -87,14 +89,15 @@ window.onload = function()
 {
 	canvas = document.createElement("canvas");
 
-	document.addEventListener("keydown", onpress);
-	document.addEventListener("keyup", onpress);
-
+	//keydown and keyup are specific keywords
+	document.addEventListener("keydown", analyzeKeyPress);
+	document.addEventListener("keyup", analyzeKeyPress);
 
 	width = 500;	//window.innerWidth;
 	height = 500;	//window.innerHeight;
 	canvas.width = width;
 	canvas.height = height;
+
 	ctx = canvas.getContext("2d");
 	ctx.fillStyle = "white";
 	document.body.appendChild(canvas);
@@ -125,7 +128,7 @@ function update()
 
 function render()
 {
-	ctx.fillRect(0,0,width,height);
+	ctx.fillRect(0,0,width,height);	//refresh background
 	player.update();
 	player.draw();
 }
