@@ -1,11 +1,14 @@
 1. Create start menu
 
-2. Create basic map
+2. Create game
+  -background (just get something decent looking)
+  -sprites (visuals)
+    animations(walking, jumping, attacking, etc.)
+  -player (game mechanics)
+    health, attacking, blocking, parrying
   -platforms
-  -background
- 
-3. Create player
-  -...
+    Making them look good
+    Collision detection
 
-4. Multiplayer
-  -...
+3. Multiplayer
+  -GL Loic
