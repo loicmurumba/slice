@@ -3,6 +3,7 @@
 
 <head>
 	<title>Slice</title>
+	<! GOD IS ONE FUNNY MUHFUCKA>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js" > </script>
 	<script src="scripts.js"></script>
@@ -67,10 +68,12 @@ PLAYING = false,
 MOVESPEED = 150,
 START_X = 325,
 START_Y = 325,
+CONNECTED = false,
 
 canvas,
 width,
 height,
+socket,
 ctx,
 image,	//probably doesn't have to be global
 frames,
@@ -78,6 +81,7 @@ keyStates = {};
 
 player = 
 {
+
 	x: START_X,
 	y: START_Y,
 
@@ -103,6 +107,11 @@ player =
 			if(keyStates[40])
 			{
 				player.y += MOVESPEED * dt;
+			}
+		if (!CONNECTED ) {
+			console.log("trying");
+					socket = io.connect('http://localhost:4004');
+					CONNECTED = true;
 			}
 				}
 
@@ -138,6 +147,7 @@ window.onload = function()
 
 	width = 500;	
 	height = 500;	
+		
 	//width = window.innerWidth;
 	//height = window.innerHeight;
 	canvas.width = width;
