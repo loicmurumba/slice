@@ -8,6 +8,18 @@
 	<script src="scripts.js"></script>
 
 	<style>
+	div
+	{
+		display: none;
+		bottom: 40%;
+		width: 300px;
+		margin: auto;
+		height: 100px;
+		background-color: black;
+	}
+	.showing{
+		display: block;
+	}
 	canvas
 	{
 		display: none;
@@ -21,6 +33,7 @@
 	}
 	html, body
 	{   
+		margin:0;
 		width:100%;
 		height:100%;
 		overflow: hidden; 
@@ -29,10 +42,28 @@
 </head>
 <body>
 <script language="JavaScript">
+console.log('test');
+$(document).ready(function(){
+$('div').click(function(){
+	console.log('madet');
+	$('canvas').toggleClass('showing');
+	$('div').toggleClass('showing');
+	PLAYING = true;
 
+
+
+
+
+
+
+
+
+});
+});
 var
 
 //constants
+PLAYING = false,
 MOVESPEED = 150,
 START_X = 325,
 START_Y = 325,
@@ -52,30 +83,34 @@ player =
 
 	update: function(dt)
 	{
-		//left arrow
-		if(keyStates[37])
-		{
-			player.x -= MOVESPEED * dt;
-		}
-		//up arrow
-		if(keyStates[38])
-		{
-			player.y -= MOVESPEED * dt;
-		}
-		//right arrow
-		if(keyStates[39])
-		{
-			player.x += MOVESPEED * dt;
-		}
-		//down arrow
-		if(keyStates[40])
-		{
-			player.y += MOVESPEED * dt;
-		}
+		if(PLAYING){
+			//left arrow
+			if(keyStates[37])
+			{
+				player.x -= MOVESPEED * dt;
+			}
+			//up arrow
+			if(keyStates[38])
+			{
+				player.y -= MOVESPEED * dt;
+			}
+			//right arrow
+			if(keyStates[39])
+			{
+				player.x += MOVESPEED * dt;
+			}
+			//down arrow
+			if(keyStates[40])
+			{
+				player.y += MOVESPEED * dt;
+			}
+				}
+
 	},
 
 	draw: function()
 	{
+
 		ctx.drawImage(image, this.x, this.y);
 	}
 };
@@ -131,7 +166,7 @@ function run()
 		update(dt);
 		render();
 
-		lastTime = now
+		lastTime = now;
 		window.requestAnimationFrame(loop, canvas);
 	}
 	window.requestAnimationFrame(loop, canvas);
@@ -150,5 +185,7 @@ function render()
 }
 
 </script>
+
+<div class="start-game-button showing"></div>
 </body>
 </html>

@@ -6,13 +6,14 @@ var		io = require('socket.io'),
         verbose  = false,
         app = express();
 
-app.listen( gameport );
+server = app.listen( gameport );
 var socket = io(server);
 
 socket.sockets.on('connection', connectFunction)
 
 function connectFunction(socket){
-	
+	console.log('we got hit');
+
 
 }
         //Log something so we know that it succeeded.

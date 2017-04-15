@@ -1,3 +1,2 @@
 //stuff
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js" > </script>
