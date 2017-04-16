@@ -4,7 +4,9 @@ var		socket = require('socket.io'),
 		express = require('express'),
         UUID = require('uuid'),
         verbose  = false,
-        app = express();
+        app = express(),
+        playercount =0,
+        players;
 
 server = app.listen( gameport );
 var io = socket(server);
@@ -12,6 +14,17 @@ var io = socket(server);
 
 function connectFunction(socket){
 	console.log('we got hit');
+ 	playercount++;
+ 	//players.push({id: playercount, x:325, y:325});
+	
+ 	function updatePos(data){
+
+ 		socket.broadcast.emit('position', data)
+ 		console.log('we got update');
+ 	}
+
+	socket.on('position', updatePos);
+
 }
 
 io.sockets.on('connection', connectFunction)

@@ -65,14 +65,16 @@ var
 
 //constants
 PLAYING = false,
-MOVESPEED = 150,
+MOVESPEED = 250,
 START_X = 325,
 START_Y = 325,
 CONNECTED = false,
 
 canvas,
 width,
+otherplayer,
 height,
+id,
 socket,
 ctx,
 image,	//probably doesn't have to be global
@@ -108,17 +110,21 @@ player =
 			{
 				player.y += MOVESPEED * dt;
 			}
-		if (!CONNECTED ) {
-			console.log("trying");
-					socket = io.connect('http://localhost:4004');
-					CONNECTED = true;
-			}
+			if (!CONNECTED ) {
+			
 				}
+			var pos = {
+				x: player.x,
+				y: player.y
+			}
+			socket.emit('position', pos)
+		}
 
 	},
 
 	draw: function()
 	{
+
 
 		ctx.drawImage(image, this.x, this.y);
 	}
@@ -163,8 +169,17 @@ window.onload = function()
 		run();
 	}
 	image.src = "Images/figure.gif";	//this line is done right after image = new Image()
-}
+	console.log("trying");
+					socket = io.connect('http://localhost:4004');
+					CONNECTED = true;
+					
 
+
+}
+function drawotherplayer(data){
+	console.log(data);
+	ctx.drawImage(image, data.x, data.y);
+}
 function run()
 {
 	var lastTime;
@@ -175,6 +190,7 @@ function run()
 
 		update(dt);
 		render();
+			socket.on('position', drawotherplayer);
 
 		lastTime = now;
 		window.requestAnimationFrame(loop, canvas);
