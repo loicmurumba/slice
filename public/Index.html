@@ -52,13 +52,6 @@ $('div').click(function(){
 	PLAYING = true;
 
 
-
-
-
-
-
-
-
 });
 });
 var
@@ -72,7 +65,7 @@ CONNECTED = false,
 
 canvas,
 width,
-otherplayer,
+otherplayers=[],
 height,
 id,
 socket,
@@ -80,6 +73,28 @@ ctx,
 image,	//probably doesn't have to be global
 frames,
 keyStates = {};
+
+function socketConnect(){
+
+}
+function socketDisconnect(){
+	
+}
+function newPlayer(){
+	
+}
+function movePlayer(){
+	
+}
+function removePlayer(){
+	
+}
+socket = io.connect('http://localhost:4004');
+socket.on("connect", socketConnect);
+socket.on("disconnect", socketDisconnect);
+socket.on("new player", newPlayer);
+socket.on("move player", movePlayer);
+socket.on("remove player", removePlayer);
 
 player = 
 {
@@ -180,8 +195,9 @@ window.onload = function()
 	}
 	image.src = "Images/figure.gif";	//this line is done right after image = new Image()
 	console.log("trying");
-					socket = io.connect('http://localhost:4004');
-					CONNECTED = true;
+	
+	CONNECTED = true;
+
 					
 
 
