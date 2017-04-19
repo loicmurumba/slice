@@ -83,7 +83,7 @@ keyStates = {};
 
 player = 
 {
-
+	lastSend : Number(Date.now());
 	x: START_X,
 	y: START_Y,
 
@@ -117,13 +117,17 @@ player =
 				x: player.x,
 				y: player.y
 			}
-			socket.emit('position', pos)
+			if(Date.now() - lastSend >2000){
+				socket.emit('position', pos)
+				lastSend = Date.now();
+			}
 		}
 
 	},
 
 	draw: function()
 	{
+
 
 
 		ctx.drawImage(image, this.x, this.y);
@@ -142,6 +146,10 @@ function analyzeKeyPress(e)
 	}
 
 };
+function drawotherplayer(data){
+
+	console.log(data.x);
+}
 
 window.onload = function()
 {
@@ -164,6 +172,8 @@ window.onload = function()
 	document.body.appendChild(canvas);
 
 	image = new Image();
+	image2 = new Image();
+
 	image.onload = function()
 	{
 		run();
@@ -176,10 +186,7 @@ window.onload = function()
 
 
 }
-function drawotherplayer(data){
-	console.log(data);
-	ctx.drawImage(image, data.x, data.y);
-}
+
 function run()
 {
 	var lastTime;
@@ -190,6 +197,8 @@ function run()
 
 		update(dt);
 		render();
+
+
 			socket.on('position', drawotherplayer);
 
 		lastTime = now;
@@ -206,7 +215,10 @@ function update(dt)
 
 function render()
 {
-	ctx.fillRect(0,0,width,height);	//refresh background
+	ctx.fillStyle = "white";
+	ctx.fillRect(0,0,width,height);	//refresh background\
+	 ctx.fillStyle = "black";
+//	ctx.fillRect(data.x, data.y, data.x + 200, data.y + 200);
 	player.draw();
 }
 

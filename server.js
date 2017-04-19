@@ -20,7 +20,7 @@ function connectFunction(socket){
  	function updatePos(data){
 
  		socket.broadcast.emit('position', data)
- 		console.log('we got update');
+ 		
  	}
 
 	socket.on('position', updatePos);
