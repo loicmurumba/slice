@@ -3,6 +3,7 @@ var gameport = 4004;
 var		socket = require('socket.io'),
 		express = require('express'),
         UUID = require('uuid'),
+        Player = require('public/player.js').Player,
         verbose  = false,
         app = express(),
         playercount =0,
@@ -11,6 +12,16 @@ var		socket = require('socket.io'),
 server = app.listen( gameport );
 var io = socket(server);
 
+function playerJoin(){
+var newPlayer = new Player();
+
+}
+function disconnect(){
+
+}
+function playerMove(){
+
+}
 
 function connectFunction(socket){
 	console.log('we got hit');
@@ -19,15 +30,20 @@ function connectFunction(socket){
 	
  	function updatePos(data){
 
- 		socket.broadcast.emit('position', data)
+ 		socket.broadcast.emit('position', data);
  		
  	}
 
-	socket.on('position', updatePos);
+	socket.on('playerJoin', playerJoin);
+	socket.on('disconnect', disconnect);
+	socket.on('playerMove', playerMove);
+
 
 }
 
 io.sockets.on('connection', connectFunction)
+
+
 
         //Log something so we know that it succeeded.
 console.log('\t :: Express :: Listening on port ' + gameport );

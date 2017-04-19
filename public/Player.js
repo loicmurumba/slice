@@ -1,8 +1,8 @@
 //stuff
 
-var Player = function(startX, startY) {
-    var x = startX,
-        y = startY,
+var Player = function() {
+    var x = 325,
+        y = 325,
         id;
     
     var getX = function() {
