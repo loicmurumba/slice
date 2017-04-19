@@ -9,11 +9,23 @@ var		socket = require('socket.io'),
         playercount =0,
         players;
 
+players = [];
 server = app.listen( gameport );
 var io = socket(server);
 
-function playerJoin(){
-var newPlayer = new Player();
+function playerJoin(data){
+var newPlayer = new Player(data.x, data.y);
+newPlayer.id = this.id;
+
+this.broadcast.emit("new player", {id: newPlayer.id, x: newPlayer.getX(), y: newPlayer.getY()});
+
+var i, connectedPlayer;
+for (i = 0; i < players.length; i++) {
+    connectedPlayer = players[i];
+    this.emit("new player", {id: connectedPlayer.id, x: connectedPlayer.getX(), y: connectedPlayer.getY()});
+};
+
+players.push(newPlayer);
 
 }
 function disconnect(){
