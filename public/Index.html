@@ -76,19 +76,9 @@ keyStates = {};
 
 function socketConnect(){
 
+	socket.emit("new player", {x: localPlayer.getX(), y: localPlayer.getY()});
 }
-function socketDisconnect(){
-	
-}
-function newPlayer(){
-	
-}
-function movePlayer(){
-	
-}
-function removePlayer(){
-	
-}
+
 socket = io.connect('http://localhost:4004');
 socket.on("connect", socketConnect);
 socket.on("disconnect", socketDisconnect);
@@ -98,12 +88,14 @@ socket.on("remove player", removePlayer);
 
 player = 
 {
-	lastSend : Number(Date.now());
 	x: START_X,
 	y: START_Y,
-
+	prevX: START_X,
+	prevY: START_Y;
 	update: function(dt)
 	{
+		prevX = x;
+		prevY = y;
 		if(PLAYING){
 			//left arrow
 			if(keyStates[37])
@@ -125,16 +117,13 @@ player =
 			{
 				player.y += MOVESPEED * dt;
 			}
-			if (!CONNECTED ) {
 			
-				}
 			var pos = {
 				x: player.x,
 				y: player.y
 			}
-			if(Date.now() - lastSend >2000){
-				socket.emit('position', pos)
-				lastSend = Date.now();
+			if (prevY != y || prevX || x) {
+				socket.emit("playerMove", {x: x, y: y});
 			}
 		}
 
@@ -161,9 +150,56 @@ function analyzeKeyPress(e)
 	}
 
 };
-function drawotherplayer(data){
+function playerById(id) {
+    var i;
+    for (i = 0; i < otherplayers.length; i++) {
+        if (otherplayers[i].id == id)
+            return otherplayers[i];
+    };
 
-	console.log(data.x);
+    return false;
+	};
+
+function socketConnect(){
+
+}
+function socketDisconnect(){
+	
+}
+function newPlayer(){
+
+	var newPlayer = new Player(data.x, data.y);
+	newPlayer.id = data.id;
+	otherplayers.push(newPlayer);
+}
+function movePlayer(){
+	var movePlayer = playerById(data.id);
+
+	if (!movePlayer) {
+    	console.log("Player not found: "+data.id);
+    	return;
+	};
+
+movePlayer.setX(data.x);
+movePlayer.setY(data.y);
+	
+}
+function removePlayer(){
+	
+
+	remove = playerById(this.id);
+
+	if (!remove) {
+    console.log("Player not found: "+this.id);
+    return;
+	};
+
+	players.splice(remove.indexOf(removePlayer), 1);
+}
+function drawplayer(data){
+
+ctx.fillRect(data.x,data.y,data.x+100,data.y+100);
+
 }
 
 window.onload = function()
@@ -215,7 +251,6 @@ function run()
 		render();
 
 
-			socket.on('position', drawotherplayer);
 
 		lastTime = now;
 		window.requestAnimationFrame(loop, canvas);

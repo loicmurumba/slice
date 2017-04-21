@@ -27,11 +27,41 @@ for (i = 0; i < players.length; i++) {
 players.push(newPlayer);
 
 }
+function playerById(id) {
+    var i;
+    for (i = 0; i < players.length; i++) {
+        if (players[i].id == id)
+            return players[i];
+    };
+
+    return false;
+	};
+
 function disconnect(){
-
 }
-function playerMove(){
+function playerMove(data){
+	var movePlayer = playerById(data.id);
 
+	if (!movePlayer) {
+    console.log("Player not found: "+data.id);	
+    return;
+	};
+
+	movePlayer.setX(data.x);	
+	movePlayer.setY(data.y);
+
+	this.broadcast.emit("movePlayer", {id: movePlayer.id, x: movePlayer.getX(), y: movePlayer.getY()});
+}
+function playerRemove(data){
+	
+	remove = playerById(this.id);
+
+	if (!remove) {
+    console.log("Player not found: "+this.id);
+    return;
+	};
+
+	players.splice(remove.indexOf(removePlayer), 1);
 }
 
 function connectFunction(socket){
@@ -48,6 +78,7 @@ function connectFunction(socket){
 	socket.on('playerJoin', playerJoin);
 	socket.on('disconnect', disconnect);
 	socket.on('playerMove', playerMove);
+	socket.on('playerRemove', playerRemove)
 
 
 }
