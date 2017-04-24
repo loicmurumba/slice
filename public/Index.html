@@ -43,17 +43,75 @@
 </head>
 <body>
 <script language="JavaScript">
-console.log('test');
+
+
+
+function socketConnect(){
+
+	socket.emit("playerJoin", {x: player.x, y: player.y, id:player.id});
+}
+function socketDisconnect(){
+	
+}
+function newPlayer(data){
+
+	var newPlayer = {x:data.x, y:data.y, id:data.id};
+	otherplayers.push(newPlayer);
+}
+function movePlayer(){
+	var movePlayer = playerById(data.id);
+
+	if (!movePlayer) {
+    	console.log("Player not found: "+data.id);
+    	return;
+	};
+
+movePlayer.x = data.x;
+movePlayer.y = data.y;
+	
+}
+function removePlayer(){
+	
+
+	remove = playerById(this.id);
+
+	if (!remove) {
+    console.log("Player not found: "+this.id);
+    return;
+	};
+
+	players.splice(remove.indexOf(removePlayer), 1);
+}
+function drawotherplayer(data){
+
+//ctx.fillRect(data.x,data.y,data.x+100,data.y+100);
+ctx.drawImage(image, data.x, data.y);
+//console.log(data);
+
+}
+function assign(data){
+	player.id = data;
+}
+
+
 $(document).ready(function(){
-$('div').click(function(){
-	console.log('madet');
-	$('canvas').toggleClass('showing');
-	$('div').toggleClass('showing');
-	PLAYING = true;
 
+	$('div').click(function(){
+		console.log('madet');
+		$('canvas').toggleClass('showing');
+		socket = io.connect('http://localhost:4004');
+		
+		socket.on("connect", socketConnect);
+		socket.on("disconnect", socketDisconnect);
+		socket.on("new player", newPlayer);
+		socket.on("move player", movePlayer);
+		socket.on("assignID", assign);
+		socket.on("remove player", removePlayer);
+		$('div').toggleClass('showing');
+		PLAYING = true;
+	});
+});
 
-});
-});
 var
 
 //constants
@@ -68,34 +126,27 @@ width,
 otherplayers=[],
 height,
 id,
+
 socket,
 ctx,
 image,	//probably doesn't have to be global
 frames,
 keyStates = {};
 
-function socketConnect(){
-
-	socket.emit("new player", {x: localPlayer.getX(), y: localPlayer.getY()});
-}
-
-socket = io.connect('http://localhost:4004');
-socket.on("connect", socketConnect);
-socket.on("disconnect", socketDisconnect);
-socket.on("new player", newPlayer);
-socket.on("move player", movePlayer);
-socket.on("remove player", removePlayer);
-
 player = 
 {
 	x: START_X,
 	y: START_Y,
+	id:1,
 	prevX: START_X,
-	prevY: START_Y;
+	prevY: START_Y,
+	start: function(){
+	socket.emit("connect", {x: this.x, y: this.y, id : this.id});
+	},
 	update: function(dt)
 	{
-		prevX = x;
-		prevY = y;
+		prevX = this.x;
+		prevY = this.y;
 		if(PLAYING){
 			//left arrow
 			if(keyStates[37])
@@ -122,8 +173,9 @@ player =
 				x: player.x,
 				y: player.y
 			}
-			if (prevY != y || prevX || x) {
-				socket.emit("playerMove", {x: x, y: y});
+			if (prevY != this.y && prevX != this.x) {
+				socket.emit("playerMove", {x: this.x, y: this.y, id : this.id});
+				console.log(this.id);
 			}
 		}
 
@@ -156,50 +208,9 @@ function playerById(id) {
         if (otherplayers[i].id == id)
             return otherplayers[i];
     };
+    console.log("pbyid" + id);
 
     return false;
-	};
-
-function socketConnect(){
-
-}
-function socketDisconnect(){
-	
-}
-function newPlayer(){
-
-	var newPlayer = new Player(data.x, data.y);
-	newPlayer.id = data.id;
-	otherplayers.push(newPlayer);
-}
-function movePlayer(){
-	var movePlayer = playerById(data.id);
-
-	if (!movePlayer) {
-    	console.log("Player not found: "+data.id);
-    	return;
-	};
-
-movePlayer.setX(data.x);
-movePlayer.setY(data.y);
-	
-}
-function removePlayer(){
-	
-
-	remove = playerById(this.id);
-
-	if (!remove) {
-    console.log("Player not found: "+this.id);
-    return;
-	};
-
-	players.splice(remove.indexOf(removePlayer), 1);
-}
-function drawplayer(data){
-
-ctx.fillRect(data.x,data.y,data.x+100,data.y+100);
-
 }
 
 window.onload = function()
@@ -271,6 +282,10 @@ function render()
 	 ctx.fillStyle = "black";
 //	ctx.fillRect(data.x, data.y, data.x + 200, data.y + 200);
 	player.draw();
+	for (var i = 0; i < otherplayers.length; i++) {
+		drawotherplayer({x:otherplayers[i].x, y:otherplayers[i].y});
+	}
+	
 }
 
 </script>

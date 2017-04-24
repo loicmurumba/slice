@@ -3,7 +3,7 @@ var gameport = 4004;
 var		socket = require('socket.io'),
 		express = require('express'),
         UUID = require('uuid'),
-        Player = require('public/player.js').Player,
+        Player = require('./Player').Player,
         verbose  = false,
         app = express(),
         playercount =0,
@@ -15,7 +15,8 @@ var io = socket(server);
 
 function playerJoin(data){
 var newPlayer = new Player(data.x, data.y);
-newPlayer.id = this.id;
+newPlayer.id = playercount;
+this.emit("assignID", playercount);
 
 this.broadcast.emit("new player", {id: newPlayer.id, x: newPlayer.getX(), y: newPlayer.getY()});
 var i, connectedPlayer;
@@ -25,6 +26,7 @@ for (i = 0; i < players.length; i++) {
 };
 
 players.push(newPlayer);
+console.log(players);
 
 }
 function playerById(id) {
@@ -49,7 +51,7 @@ function playerMove(data){
 
 	movePlayer.setX(data.x);	
 	movePlayer.setY(data.y);
-
+	console.log("move");
 	this.broadcast.emit("movePlayer", {id: movePlayer.id, x: movePlayer.getX(), y: movePlayer.getY()});
 }
 function playerRemove(data){
@@ -69,11 +71,6 @@ function connectFunction(socket){
  	playercount++;
  	//players.push({id: playercount, x:325, y:325});
 	
- 	function updatePos(data){
-
- 		socket.broadcast.emit('position', data);
- 		
- 	}
 
 	socket.on('playerJoin', playerJoin);
 	socket.on('disconnect', disconnect);
