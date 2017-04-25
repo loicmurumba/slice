@@ -14,15 +14,15 @@ server = app.listen( gameport );
 var io = socket(server);
 
 function playerJoin(data){
-var newPlayer = new Player(data.x, data.y);
+var newPlayer = {x: data.x, y: data.y};
 newPlayer.id = playercount;
 this.emit("assignID", playercount);
 
-this.broadcast.emit("new player", {id: newPlayer.id, x: newPlayer.getX(), y: newPlayer.getY()});
+this.broadcast.emit("new player", {id: newPlayer.id, x: newPlayer.x, y: newPlayer.y});
 var i, connectedPlayer;
 for (i = 0; i < players.length; i++) {
     connectedPlayer = players[i];
-    this.emit("new player", {id: connectedPlayer.id, x: connectedPlayer.getX(), y: connectedPlayer.getY()});
+    this.emit("new player", {id: connectedPlayer.id, x: connectedPlayer.x, y: connectedPlayer.y});
 };
 
 players.push(newPlayer);
@@ -49,10 +49,10 @@ function playerMove(data){
     return;
 	};
 
-	movePlayer.setX(data.x);	
-	movePlayer.setY(data.y);
-	console.log("move");
-	this.broadcast.emit("movePlayer", {id: movePlayer.id, x: movePlayer.getX(), y: movePlayer.getY()});
+	movePlayer.x = data.x;	
+	movePlayer.y = data.y;
+	console.log(data);
+	this.broadcast.emit("movePlayer", {id: data.id, x: data.x, y: data.y});
 }
 function playerRemove(data){
 	

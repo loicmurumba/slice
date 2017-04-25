@@ -57,15 +57,16 @@ function newPlayer(data){
 
 	var newPlayer = {x:data.x, y:data.y, id:data.id};
 	otherplayers.push(newPlayer);
+	console.log(newPlayer);
 }
-function movePlayer(){
+function movePlayer(data){
 	var movePlayer = playerById(data.id);
 
 	if (!movePlayer) {
     	console.log("Player not found: "+data.id);
     	return;
 	};
-
+console.log(data);
 movePlayer.x = data.x;
 movePlayer.y = data.y;
 	
@@ -86,7 +87,7 @@ function drawotherplayer(data){
 
 //ctx.fillRect(data.x,data.y,data.x+100,data.y+100);
 ctx.drawImage(image, data.x, data.y);
-//console.log(data);
+
 
 }
 function assign(data){
@@ -104,7 +105,7 @@ $(document).ready(function(){
 		socket.on("connect", socketConnect);
 		socket.on("disconnect", socketDisconnect);
 		socket.on("new player", newPlayer);
-		socket.on("move player", movePlayer);
+		socket.on("movePlayer", movePlayer);
 		socket.on("assignID", assign);
 		socket.on("remove player", removePlayer);
 		$('div').toggleClass('showing');
@@ -173,7 +174,7 @@ player =
 				x: player.x,
 				y: player.y
 			}
-			if (prevY != this.y && prevX != this.x) {
+			if (prevY != this.y || prevX != this.x) {
 				socket.emit("playerMove", {x: this.x, y: this.y, id : this.id});
 				console.log(this.id);
 			}
