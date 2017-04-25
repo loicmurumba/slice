@@ -66,7 +66,7 @@ var
 //constants
 PLAYING = false,
 MOVESPEED = 150,
-START_X = 325,
+START_X = 0,
 START_Y = 325,
 CONNECTED = false,
 
@@ -76,7 +76,7 @@ height,
 socket,
 ctx,
 image,	//probably doesn't have to be global
-frames,
+bg,		//same with this
 keyStates = {};
 
 player = 
@@ -84,6 +84,9 @@ player =
 
 	x: START_X,
 	y: START_Y,
+	src_x: 0,
+	src_y: 0,
+	frame_state: 0,
 	hp: 3,
 
 	update: function(dt)
@@ -93,6 +96,7 @@ player =
 			if(keyStates[37])
 			{
 				player.x -= MOVESPEED * dt;
+
 			}
 			//up arrow
 			if(keyStates[38])
@@ -103,11 +107,35 @@ player =
 			if(keyStates[39])
 			{
 				player.x += MOVESPEED * dt;
+				if(player.frame_state <= 5)
+				{
+					player.src_x = image.width * 0;
+					player.src_y = image.height * 0;
+				}
+				else if (player.frame_state <= 10)
+				{
+					player.src_x = image.width * 1/7;
+					player.src_y = image.height * 0;
+				}
+				else if (player.frame_state <= 15)
+				{
+					player.src_x = image.width * 7/24;
+					player.src_y = image.height * 0;
+				}
 			}
 			//down arrow
 			if(keyStates[40])
 			{
 				player.y += MOVESPEED * dt;
+			}
+			//update frames
+			if(player.frame_state == 15)
+			{
+				player.frame_state = 0;
+			}
+			else
+			{
+				player.frame_state += 1;
 			}
 		if (!CONNECTED ) {
 			console.log("trying");
@@ -115,13 +143,14 @@ player =
 					CONNECTED = true;
 			}
 				}
-
 	},
 
 	draw: function()
 	{
-
-		ctx.drawImage(image, this.x, this.y);
+		//ctx.drawImage(image, this.x, this.y);
+		//ctx.drawImage(image, this.x, this.y, image.width, image.height);
+		//4 and 6 because of the sprite sheet layout
+		ctx.drawImage(image, this.src_x, this.src_y, image.width/6, image.height/4, this.x, this.y, image.width/6, image.height/4);
 	}
 };
 
@@ -146,8 +175,10 @@ window.onload = function()
 	document.addEventListener("keydown", analyzeKeyPress);
 	document.addEventListener("keyup", analyzeKeyPress);
 
-	width = 500;	
-	height = 500;	
+	frames = 0;
+
+	width = 500;	//450
+	height = 500;	//300
 		
 	//width = window.innerWidth;
 	//height = window.innerHeight;
@@ -158,12 +189,15 @@ window.onload = function()
 	ctx.fillStyle = "white";
 	document.body.appendChild(canvas);
 
+	bg = new Image();
+	bg.src = "Images/sunset_bg.jpg";
+
 	image = new Image();
 	image.onload = function()
 	{
 		run();
 	}
-	image.src = "Images/figure.gif";	//this line is done right after image = new Image()
+	image.src = "Images/sheet.gif";	//this line is done right after image = new Image()
 }
 
 function run()
@@ -186,12 +220,12 @@ function run()
 function update(dt)
 {
 	player.update(dt);
-	frames++;
 }
 
 function render()
 {
-	ctx.fillRect(0,0,width,height);	//refresh background
+	ctx.drawImage(bg, 0, 0, 500, 500);
+	//ctx.fillRect(0,0,width,height);	//refresh background
 	player.draw();
 }
 
